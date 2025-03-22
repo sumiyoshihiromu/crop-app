@@ -7,20 +7,22 @@ export class AppService {
   async scrapeWebsite() {
     const browser = await puppeteer.launch({
       headless: true,
-      args: ['--no-sandbox'],
+      args: ['--no-sandbox', '--lang=ja'],
     });
     const page = await browser.newPage();
 
     try {
-      await page.goto('https://www.google.co.jp/'); // スクレイピング対象のURL
+      await page.setDefaultNavigationTimeout(0);
+      await page.goto('https://race.netkeiba.com/top/?rf=navi'); // スクレイピング対象のURL
 
       const data = await page.evaluate(() => {
         // スクレイピングロジックをここに記述
-        const elements = document.querySelectorAll('div.gb_Z:nth-child(1) > a'); // 適切なセレクタを使用
+        const elements = document.querySelectorAll('p.Sprint'); // 適切なセレクタを使用
         return Array.from(elements).map((element) => element.textContent);
       });
 
-      console.log('Scraped data:', data);
+      console.log('取得したデータ:', data);
+      return data;
     } catch (error) {
       console.error('Scraping failed:', error);
     } finally {

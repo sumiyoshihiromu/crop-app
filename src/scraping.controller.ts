@@ -7,7 +7,12 @@ export class ScrapingController {
 
   @Get()
   async executeScraping() {
-    await this.appService.scrapeWebsite();
-    return 'スクレイピングを実行しました';
+    const scrapingData = await this.appService.scrapeWebsite();
+
+    if (scrapingData) {
+      return 'スクレイピング結果:' + scrapingData;
+    } else {
+      return 'スクレイピング失敗';
+    }
   }
 }
